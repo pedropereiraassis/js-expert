@@ -1,0 +1,23 @@
+[
+  {
+    "id": "c344ff01-e177-4797-9091-d2f66b3483bb",
+    "name": "Malibu",
+    "releaseYear": 2022,
+    "available": true,
+    "gasAvailable": true
+  },
+  {
+    "id": "0f5b348e-8ed8-4688-aa72-c41df1f192e7",
+    "name": "Malibu",
+    "releaseYear": 2023,
+    "available": true,
+    "gasAvailable": true
+  },
+  {
+    "id": "cc04f77d-fcdd-463a-be9a-674f9b74a696",
+    "name": "Civic",
+    "releaseYear": 2022,
+    "available": true,
+    "gasAvailable": true
+  }
+]
