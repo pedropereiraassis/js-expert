@@ -32,18 +32,18 @@ console.assert(('hello' && 123) === 123, "&& returns the last element!")
 
 // --------------
 const item = {
-    name: 'ErickWendel',
+    name: 'PedroAssis',
     age: 25,
-    // string: 1 se nao for primitivo, chama o valueOf
+    // string: 1 if not primitive calls valueOf
     toString() {
         return `Name: ${this.name}, Age: ${this.age}`
     },
-    // number: 1 se nao for primitivo, chama o toString
+    // number: 1 if not primitive calss toString
     valueOf() {
         return { hey: 'dude'}
         // return 007
     },
-    // ele tem prioridade na parada!
+    // priority!
     [Symbol.toPrimitive](coercionType) {
         // console.log('trying to convert to', coercionType)
         const types = {
@@ -57,21 +57,21 @@ const item = {
 
 // console.log('toString', String(item))
 
-// // vai retornar NaN pois o toString retornou a string
+// // returns NaN because toString returned a string
 // console.log('valueOf', Number(item))
 
-// depois de adicionar o toPrimitive
+// after adding the toPrimitive
 // console.log('String', String(item))
 // console.log('Number', Number(item))
-// // chama a conversao default!
+// // calls the default conversion!
 // console.log('Date', new Date(item))
 
-console.assert(item + 0 === '{"name":"ErickWendel","age":25}0')
+console.assert(item + 0 === '{"name":"PedroAssis","age":25}0')
 // console.log('!!item is true?', !!item)
 console.assert(!!item)
 
 // console.log('string.concat', 'Ae'.concat(item))
-console.assert('Ae'.concat(item) === 'Ae{"name":"ErickWendel","age":25}')
+console.assert('Ae'.concat(item) === 'Ae{"name":"PedroAssis","age":25}')
 
 // console.log('implicit + explicit coercion (using ==)', item == String(item))
 console.assert(item == String(item))

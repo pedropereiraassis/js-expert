@@ -3,11 +3,11 @@ const obj = {}
 const arr = []
 const fn = () => {}
 
-// internamente, objetos literais viram funçoes explicitas
+// internally, literal objects turns into explicit functions
 console.log('new Object() is {}? ', new Object().__proto__ === {}.__proto__)
 assert.deepStrictEqual(new Object().__proto__, {}.__proto__)
 
-// __proto__ é a referencia do objeto que possui as propriedades nele
+// __proto__ is the object's reference that has its properties
 console.log('obj.__proto__ === Object.prototype', obj.__proto__ === Object.prototype)
 assert.deepStrictEqual(obj.__proto__ , Object.prototype)
 
@@ -17,7 +17,7 @@ assert.deepStrictEqual(arr.__proto__, Array.prototype)
 console.log('fn.__proto__ === Function.prototype', fn.__proto__ === Function.prototype)
 assert.deepStrictEqual(fn.__proto__ , Function.prototype)
 
-//  o __proto__ de Object.prototype é null
+//  the __proto__ of Object.prototype is null
 console.log('obj.__proto__.__proto__ === null', obj.__proto__.__proto__ === null)
 assert.deepStrictEqual(obj.__proto__.__proto__, null)
 
@@ -28,7 +28,7 @@ function Employee() {}
 Employee.prototype.salary = () => "salary**"
 
 function Supervisor() {}
-// herda a instancia de employee
+// inherit employee's instance
 Supervisor.prototype = Object.create(Employee.prototype)
 Supervisor.prototype.profitShare = () => "profitShare**"
 
@@ -36,19 +36,18 @@ function Manager(){}
 Manager.prototype = Object.create(Supervisor.prototype)
 Manager.prototype.monthlyBonuses = () => 'monthlyBonuses**'
 
-// podemos chamar via prototype, mas se tentar chamar direto dá erro!
+// we can call via prototype, but if calls directly throws an error!
 console.log('Manager.prototype.salary()', Manager.prototype.salary())
 // console.log('Manager.prototype.salary()', Manager.salary())
 
-//  se nao chamar o 'new', o primeiro __proto__ vai ser sempre 
-// a instancia de Function, sem herdar nossas classes
-// Para acessas as classes sem o new, pode acessar direto via prototype
+// if don't call 'new', the first __proto__ will always be the Function's instance, without inherit the classes
+// to access the classes without new, can access directly via prototype
 console.log("Manager.prototype.__proto__ === Supervisor.prototype", Manager.prototype.__proto__ === Supervisor.prototype)
 assert.deepStrictEqual(Manager.prototype.__proto__, Supervisor.prototype)
 
 console.log('-----')
 
-// quando chamamos com o 'new' o __proto__ recebe o prototype
+// when call with 'new' the __proto__ receives the prototype
 console.log('manager.__proto__: %s, manager.salary(): %s', new Manager().__proto__, new Manager().salary())
 console.log('Supervisor.prototype === new Manager().__proto__.__proto__', Supervisor.prototype === new Manager().__proto__.__proto__)
 assert.deepStrictEqual(Supervisor.prototype, new Manager().__proto__.__proto__)
