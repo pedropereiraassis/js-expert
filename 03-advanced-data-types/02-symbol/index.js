@@ -74,7 +74,7 @@ class MyDate {
 }
 
 const myDate = new MyDate([2023, 4, 23], [2023, 5, 12])
-const expectedDates = [ new Date(2023, 4, 23), new Date(2023, 5,12)]
+const expectedDates = [new Date(2023, 4, 23), new Date(2023, 5,12)]
 
 assert.deepStrictEqual(Object.prototype.toString.call(myDate), '[object WHAT?]')
 assert.throws(() => myDate + 1, TypeError)
@@ -91,6 +91,12 @@ assert.deepStrictEqual([...myDate], expectedDates)
 // })()
 
 ;(async () => {
-  const dates = await Promise.all([...myDate])
-  assert.deepStrictEqual(dates, expectedDates)
+  const dates = []
+
+  for await (const date of myDate) {
+    dates.push(date)
+  }
+
+  const expectedDatesInISOString = expectedDates.map((item) => item.toISOString())
+  assert.deepStrictEqual(dates, expectedDatesInISOString)
 })()
