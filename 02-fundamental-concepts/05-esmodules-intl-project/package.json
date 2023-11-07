@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx mocha --parallel test/**/*.test.js",
+    "test:dev": "npx mocha -w --parallel test/**/*.test.js",
+    "test:cov": "npx c8 npx mocha --parallel test/*.test.js"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,10 @@
     "chalk": "^4.1.2",
     "chalk-table": "^1.0.2",
     "draftlog": "^1.0.13"
+  },
+  "devDependencies": {
+    "c8": "^8.0.1",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0"
   }
 }
