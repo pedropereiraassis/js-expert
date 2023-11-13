@@ -1,0 +1,41 @@
+regex101.com
+^\d{3}.\d{3}.\d{3}-\d{2}$
+
+123.123.123-14
+321.321.321-20
+200.300.400-18
+
+---
+
+replace: [.-] (replace any '.' or '-' found)
+by:  (void) 
+
+<a href='Pedro'>Assis</a>
+<a href='John'>Doe</a>
+<a href='Bear'>Pooh</a>
+
+---
+
+replace: ^(\w+),\s(\w+)$ (above pattern of charachters)
+by: { firstName: '$2', lastName: '$1' }
+result:
+{ firstName: 'Pedro', lastName: 'Assis' }
+{ firstName: 'John', lastName: 'Doe' }
+{ firstName: 'Bear', lastName: 'Pooh' }
+
+---
+
+[Pedro Assis](https://pedroassis.com) make standup commedy and you should follow him on [Instagram](http://instagram.com/pedroassis_)
+
+Oh and you can search on [Youtube](https://youtube.com) for his videos
+
+Go on and laugh!
+
+replace: \[(.*?)\]\(([http|https].*?)\) (markdown links above - [...](...))
+by: <a href='$2'>$1</a>
+result:
+'<a href='https://pedroassis.com'>Pedro Assis</a> make standup commedy and you should follow him on <a href='http://instagram.com/pedroassis_'>Instagram</a>
+
+Oh and you can search on <a href='https://youtube.com'>Youtube</a> for his videos
+
+Go on and laugh!'
