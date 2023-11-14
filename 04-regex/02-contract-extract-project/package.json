@@ -1,0 +1,23 @@
+{
+  "name": "02-contract-extract-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./app/src/index.js",
+    "test": "npx mocha ./app/test/*.test.js",
+    "test:dev": "npx mocha -w ./app/test/*.test.js",
+    "test:cov": "npx nyc npx mocha ./app/test/*.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}
