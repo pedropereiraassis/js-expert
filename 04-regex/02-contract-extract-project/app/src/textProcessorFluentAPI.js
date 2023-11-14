@@ -1,3 +1,5 @@
+const { evaluateRegex } = require('./util')
+
 // Fluent API's objective is to execute tasks as a pipeline, step by step
 // and at the end call the build method. Very similar to Builder pattern
 // where the difference is that here is about processes (chains) and the
@@ -25,12 +27,24 @@ class TextProcessorFluentAPI {
     // m -> multiline
     // i -> insensitive
 
-    const matchPersonRegex = /(?<=[contratante|contratada]:\s{1})(?!\s)(.*\n.*?)$/gmi
+    const matchPersonRegex = evaluateRegex(/(?<=[contratante|contratada]:\s{1})(?!\s)(.*\n.*?)$/gmi)
     
     // the match() method finds the entire string that has the data we need (always returning array with matches)
     const onlyPerson = this.#content.match(matchPersonRegex)
     // console.log('onlyPerson', matchPersonRegex.test(this.#content))
     this.#content = onlyPerson
+    return this
+  }
+
+  divideTextInColumns() {
+    const splitRegex = evaluateRegex(/,/)
+    this.#content = this.#content.map((line) => line.split(splitRegex))
+    return this
+  }
+
+  removeEmptyCharacteres() {
+    const trimSpaces = evaluateRegex(/^\s+|\s+$|\n/g)
+    this.#content = this.#content.map((line) => line.map((item) => item.replace(trimSpaces, '')))
     return this
   }
 
