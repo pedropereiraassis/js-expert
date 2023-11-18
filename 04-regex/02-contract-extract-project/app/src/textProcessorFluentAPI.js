@@ -1,3 +1,4 @@
+const Person = require('./person')
 const { evaluateRegex } = require('./util')
 
 // Fluent API's objective is to execute tasks as a pipeline, step by step
@@ -45,6 +46,12 @@ class TextProcessorFluentAPI {
   removeEmptyCharacteres() {
     const trimSpaces = evaluateRegex(/^\s+|\s+$|\n/g)
     this.#content = this.#content.map((line) => line.map((item) => item.replace(trimSpaces, '')))
+    return this
+  }
+
+  mapPerson() {
+    // pass the array of items on Person constructor
+    this.#content = this.#content.map((line) => new Person(line))
     return this
   }
 
