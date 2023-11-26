@@ -16,5 +16,8 @@ export default {
     }
   },
   maxWorkers: "50%",
-  testEnvironment: "node"
+  testEnvironment: "node",
+  watchPathIgnorePatterns: [
+    "node_modules"
+  ],
 }
