@@ -1,0 +1,19 @@
+{
+  "name": "01-decorator-middleware",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node example/http-server.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand",
+    "test:dev": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --watchAll",
+    "test:cov": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
