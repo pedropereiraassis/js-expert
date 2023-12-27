@@ -22,6 +22,20 @@ describe('#Util - Strings', () => {
 
     expect(result).toStrictEqual(expected)
   })
-  test.todo('#lowerCaseFirstLetter should return empty given an empty string')
-  test.todo('#upperCaseFirstLetter should return empty given an empty string')
+
+  test('#lowerCaseFirstLetter should return empty given an empty string', () => {
+    const data = ''
+    const expected = ''
+    const result = Util.lowerCaseFirstLetter(data)
+
+    expect(result).toStrictEqual(expected)
+  })
+
+  test('#upperCaseFirstLetter should return empty given an empty string', () => {
+    const data = ''
+    const expected = ''
+    const result = Util.upperCaseFirstLetter(data)
+
+    expect(result).toStrictEqual(expected)
+  })
 })

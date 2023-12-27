@@ -1,6 +1,11 @@
 export default class Util {
   static #transform(str, upperCase = true) {
     const [first, ...rest] = str
+
+    if (!first) {
+      return ''
+    }
+    
     const firstLetter = upperCase ?
       first.toUpperCase() :
       first.toLowerCase()
