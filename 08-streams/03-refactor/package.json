@@ -1,5 +1,5 @@
 {
-  "name": "02-advanced",
+  "name": "03-refactor",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +8,7 @@
     "start": "mkdir -p logs && node webapi.js",
     "api1": "curl localhost:3000 | tee logs/api1.log",
     "api2": "curl localhost:4000 | tee logs/api2.log",
-    "example1": "node examples/concatStreamPassThrough.js | tee logs/concatStreamPassThrough.log",
-    "example2": "node examples/asyncStreams.js | tee logs/asyncStreams.log"
+    "example": "node examples/concatStreamAsyncIterators.js | tee logs/concatStreamAsyncIterators.log"
   },
   "keywords": [],
   "author": "",
