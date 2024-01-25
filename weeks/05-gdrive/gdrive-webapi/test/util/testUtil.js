@@ -1,38 +1,58 @@
+import { jest } from '@jest/globals'
 import { Readable, Writable, Transform } from 'stream'
-
 export default class TestUtil {
-  static generateReadableStream(data) {
-    return new Readable({
-      objectMode: true,
-      read() {
-        for (const item of data) {
-          this.push(item)
-        }
+  
+    static mockDateNow(mockImplementationPeriods) {
 
-        this.push(null)
-      }
-    })
-  }
+        const now = jest.spyOn(global.Date, global.Date.now.name)
 
-  static generateWritableStream(onData) {
-    return new Writable({
-      objectMode: true,
-      write(chunk, enconding, cb) {
-        onData(chunk)
+        mockImplementationPeriods.forEach(time => {
+            now.mockReturnValueOnce(time);
+        })
 
-        cb(null, chunk)
-      }
-    })
-  }
+    }
 
-  static generateTransformStream(onData) {
-    return new Transform({
-      objectMode: true,
-      transform(chunk, enconding, cb) {
-        onData(chunk)
+    static getTimeFromDate(dateString) {
+        return new Date(dateString).getTime()
+    }
 
-        cb(null, chunk)
-      }
-    })
-  }
+
+    static generateReadableStream(data) {
+        return new Readable({
+            objectMode: true,
+            read() {
+                for (const item of data) {
+                    this.push(item)
+                }
+
+                this.push(null)
+            }
+        })
+    }
+    static generateWritableStream(onData) {
+        return new Writable({
+            objectMode: true,
+            write(chunk, encondig, cb) {
+                onData(chunk)
+                
+                cb(null, chunk)
+            }
+        })
+    }
+
+    static generateTransformStream(onData) {
+        // async function *(source) {
+        //     for await(const chunk of data) {
+        //          yield chunk   
+        //     }
+        // }
+
+        return new Transform({
+            objectMode: true,
+            transform(chunk, enconding, cb) {
+                onData(chunk)
+                cb(null, chunk)
+            }
+        })
+    }
 }

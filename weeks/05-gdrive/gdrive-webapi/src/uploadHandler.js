@@ -2,37 +2,63 @@ import Busboy from 'busboy'
 import fs from 'fs'
 import { pipeline } from 'stream/promises'
 import { logger } from './logger.js'
-
 export default class UploadHandler {
-  constructor({ io, socketId, downloadsFolder }) {
-    this.io = io
-    this.socketId = socketId
-    this.downloadsFolder = downloadsFolder
-  }
+    constructor({ io, socketId, downloadsFolder, messageTimeDelay = 200 }) {
+        this.io = io
+        this.socketId = socketId
+        this.downloadsFolder = downloadsFolder
+        this.ON_UPLOAD_EVENT = 'file-upload'
+        this.messageTimeDelay = messageTimeDelay
+    }
 
-  handleFileBytes() {
+    canExecute(lastExecution) {
+        return (Date.now() - lastExecution) >= this.messageTimeDelay
+    }
 
-  }
+    handleFileBytes(fileName) {
+        this.lastMessageSent = Date.now()
 
-  async onFile(fieldName, file, fileName) {
-    const saveTo = `${this.downloadsFolder}/${fileName}`
-    await pipeline(
-      // 1st get a readable stream
-      file,
-      // 2nd filter, convert, transform data
-      this.handleFileBytes(fileName),
-      // 3rd process exit = a writable stream
-      fs.createWriteStream(saveTo)
-    )
+        async function* handleData(source) {
+            let alreadyProcessed = 0
 
-    logger.info(`File [${fileName}] finished`)
-  }
+            for await (const chunk of source) {
+                yield chunk
+                
+                alreadyProcessed += chunk.length
+                if (!this.canExecute(this.lastMessageSent)) {
+                    continue;
+                }
 
-  registerEvents(headers, onFinish) {
-    const busboy = Busboy({ headers })
-    busboy.on('file', this.onFile.bind(this))
-    busboy.on('finish', onFinish)
+                this.lastMessageSent = Date.now()
+                
+                this.io.to(this.socketId).emit(this.ON_UPLOAD_EVENT, { alreadyProcessed, fileName })
+                logger.info(`File [${fileName}] got ${alreadyProcessed} bytes to ${this.socketId}`)
+            }
+        }
 
-    return busboy
-  }
+        return handleData.bind(this)
+    }
+    async onFile(fieldName, file, fileName) {
+        const saveTo = `${this.downloadsFolder}/${fileName}`
+
+        await pipeline(
+            // 1o passo, pegar uma readable stream!
+            file,
+            // 2o passo, filtrar, converter, transformar dados!
+            this.handleFileBytes(fileName),
+            // 3o passo, é saida do processo, uma writable stream!
+            fs.createWriteStream(saveTo)
+        )
+
+        logger.info(`File [${fileName}] finished`)
+    }
+
+    registerEvents(headers, onFinish) {
+        const busboy = Busboy({ headers })
+        busboy.on('file', this.onFile.bind(this))
+        busboy.on('finish', onFinish)
+
+        return busboy
+    }
+
 }
