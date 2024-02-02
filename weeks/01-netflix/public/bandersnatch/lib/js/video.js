@@ -23830,7 +23830,7 @@
      * if passed an invalid path.
      *
      * @param {string} path
-     *        The fileName path like '/path/to/file.mp4'
+     *        The filename path like '/path/to/file.mp4'
      *
      * @returns {string}
      *          The extension in lower case or an empty string if no

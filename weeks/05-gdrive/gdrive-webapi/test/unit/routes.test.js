@@ -1,35 +1,40 @@
 import { describe, test, expect, jest } from '@jest/globals'
 import Routes from '../../src/routes.js'
+import TestUtil from '../util/testUtil.js'
+import UploadHandler from '../../src/uploadHandler.js'
 
 describe('Routes test suite', () => {
+  const request = TestUtil.generateReadableStream(['some file bytes'])
+  const response = TestUtil.generateWritableStream(() => { })
+
+  const defaultParams = {
+    request: Object.assign(request, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      method: '',
+      body: {}
+    }),
+    response: Object.assign(response, {
+      setHeader: jest.fn(),
+      writeHead: jest.fn(),
+      end: jest.fn(),
+    }),
+    values: () => Object.values(defaultParams)
+  }
+
   describe('#setSocketInstance', () => {
     test('setSocketInstance should store io instance', () => {
       const routes = new Routes()
       const ioObj = {
         to: (id) => ioObj,
-        emit: (event, message) => {}
+        emit: (event, message) => { }
       }
 
       routes.setSocketInstance(ioObj)
       expect(routes.io).toStrictEqual(ioObj)
     })
   })
-
-  const defaultParams = {
-    request: {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      method: '',
-      body: {}
-    },
-    response: {
-      setHeader: jest.fn(),
-      writeHead: jest.fn(),
-      end: jest.fn(),
-    },
-    values: () => Object.values(defaultParams)
-  }
 
   describe('#handler', () => {
     test('given an inexisting route should choose default route', async () => {
@@ -112,6 +117,32 @@ describe('Routes test suite', () => {
 
       expect(params.response.writeHead).toHaveBeenCalledWith(200)
       expect(params.response.end).toHaveBeenCalledWith(JSON.stringify(filesStatusesMock))
+    })
+  })
+
+  describe('#post', () => {
+    test('should validate post route workflow', async () => {
+      const routes = new Routes('/tmp')
+      const options = {
+        ...defaultParams,
+      }
+      options.request.method = 'POST'
+      options.request.url = '?socketId=1'
+
+      jest.spyOn(UploadHandler.prototype, UploadHandler.prototype.registerEvents.name)
+        .mockImplementation((headers, onFinish) => {
+          const writable = TestUtil.generateWritableStream(() => {})
+          writable.on('finish', onFinish)
+
+          return writable
+        })
+      
+      await routes.handler(...options.values())
+
+      expect(UploadHandler.prototype.registerEvents).toHaveBeenCalled()
+      expect(options.response.writeHead).toHaveBeenCalledWith(200)
+      const expectedResult = JSON.stringify({ result: 'Files uploaded with success!' })
+      expect(options.response.end).toHaveBeenCalledWith(expectedResult)
     })
   })
 })

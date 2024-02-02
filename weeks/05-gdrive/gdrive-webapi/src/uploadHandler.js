@@ -15,7 +15,7 @@ export default class UploadHandler {
         return (Date.now() - lastExecution) >= this.messageTimeDelay
     }
 
-    handleFileBytes(fileName) {
+    handleFileBytes(filename) {
         this.lastMessageSent = Date.now()
 
         async function* handleData(source) {
@@ -31,26 +31,26 @@ export default class UploadHandler {
 
                 this.lastMessageSent = Date.now()
                 
-                this.io.to(this.socketId).emit(this.ON_UPLOAD_EVENT, { alreadyProcessed, fileName })
-                logger.info(`File [${fileName}] got ${alreadyProcessed} bytes to ${this.socketId}`)
+                this.io.to(this.socketId).emit(this.ON_UPLOAD_EVENT, { alreadyProcessed, filename })
+                logger.info(`File [${filename}] got ${alreadyProcessed} bytes to ${this.socketId}`)
             }
         }
 
         return handleData.bind(this)
     }
-    async onFile(fieldName, file, fileName) {
-        const saveTo = `${this.downloadsFolder}/${fileName}`
+    async onFile(fieldName, file, { filename }) {
+        const saveTo = `${this.downloadsFolder}/${filename}`
 
         await pipeline(
             // 1o passo, pegar uma readable stream!
             file,
             // 2o passo, filtrar, converter, transformar dados!
-            this.handleFileBytes(fileName),
+            this.handleFileBytes(filename),
             // 3o passo, é saida do processo, uma writable stream!
             fs.createWriteStream(saveTo)
         )
 
-        logger.info(`File [${fileName}] finished`)
+        logger.info(`File [${filename}] finished`)
     }
 
     registerEvents(headers, onFinish) {

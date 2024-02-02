@@ -27,8 +27,8 @@ describe('FileHelper test suite', () => {
       }
       const mockUser = 'pedroassis'
       process.env.USER = mockUser
-      const fileName = 'file.png'
-      jest.spyOn(fs.promises, fs.promises.readdir.name).mockResolvedValue([fileName])
+      const filename = 'file.png'
+      jest.spyOn(fs.promises, fs.promises.readdir.name).mockResolvedValue([filename])
       jest.spyOn(fs.promises, fs.promises.stat.name).mockResolvedValue(statsMock)
       
       const result = await FileHelper.getFilesStatus('/tmp')
@@ -38,11 +38,11 @@ describe('FileHelper test suite', () => {
           size: '195 kB', // 194941 bytes
           lastModified: statsMock.birthtime,
           owner: mockUser,
-          file: fileName,
+          file: filename,
         }
       ]
       
-      expect(fs.promises.stat).toHaveBeenCalledWith(`/tmp/${fileName}`)
+      expect(fs.promises.stat).toHaveBeenCalledWith(`/tmp/${filename}`)
       expect(result).toMatchObject(expectedResult)
     })
   })

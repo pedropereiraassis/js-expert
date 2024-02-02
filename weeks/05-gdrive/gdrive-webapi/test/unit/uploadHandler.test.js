@@ -62,7 +62,9 @@ describe('Upload Handler test suite', () => {
       const params = {
         fieldName: 'video',
         file: TestUtil.generateReadableStream(chunks),
-        fileName: 'mockfile.mov',
+        options: {
+          filename: 'mockfile.mov',
+        },
       }
 
       await handler.onFile(...Object.values(params))
@@ -70,7 +72,7 @@ describe('Upload Handler test suite', () => {
       expect(onData.mock.calls.join()).toEqual(chunks.join())
       expect(onTransform.mock.calls.join()).toEqual(chunks.join())
 
-      const expectedFileName = resolve(handler.downloadsFolder, params.fileName)
+      const expectedFileName = resolve(handler.downloadsFolder, params.options.filename)
       expect(fs.createWriteStream).toHaveBeenCalledWith(expectedFileName)
     })
   })
@@ -132,7 +134,7 @@ describe('Upload Handler test suite', () => {
       ])
 
       const messages = ['hello', 'hello', 'world']
-      const fileName = 'file.avi'
+      const filename = 'file.avi'
       const expectedMessageSent = 2
 
       const source = TestUtil.generateReadableStream(messages)
@@ -144,13 +146,13 @@ describe('Upload Handler test suite', () => {
 
       await pipeline(
         source,
-        handler.handleFileBytes(fileName)
+        handler.handleFileBytes(filename)
       )
       expect(ioObj.emit).toHaveBeenCalledTimes(expectedMessageSent)
       const [firstCallResult, secondCallResult] = ioObj.emit.mock.calls
 
-      expect(firstCallResult).toEqual([handler.ON_UPLOAD_EVENT, { alreadyProcessed: 'hello'.length, fileName }])
-      expect(secondCallResult).toEqual([handler.ON_UPLOAD_EVENT, { alreadyProcessed: messages.join('').length, fileName }])
+      expect(firstCallResult).toEqual([handler.ON_UPLOAD_EVENT, { alreadyProcessed: 'hello'.length, filename }])
+      expect(secondCallResult).toEqual([handler.ON_UPLOAD_EVENT, { alreadyProcessed: messages.join('').length, filename }])
     })
   })
 
