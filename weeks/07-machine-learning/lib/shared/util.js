@@ -13,3 +13,7 @@ function supportsWorkerType() {
     return supports
   }
 }
+
+export {
+  supportsWorkerType,
+}
