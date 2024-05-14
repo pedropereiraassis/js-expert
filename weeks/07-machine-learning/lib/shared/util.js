@@ -14,6 +14,21 @@ function supportsWorkerType() {
   }
 }
 
+function prepareRunChecker({ timeDelay}) {
+  let lastEvent = Date.now()
+
+  return {
+    shouldRun() {
+      const now = Date.now()
+      const result = (now - lastEvent) > timeDelay
+      if (result) lastEvent = now
+
+      return result
+    }
+  }
+}
+
 export {
   supportsWorkerType,
+  prepareRunChecker,
 }
